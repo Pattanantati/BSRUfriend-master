@@ -33,7 +33,7 @@ public class GetUser extends AsyncTask<String, Void, String>{
             Response response = okHttpClient.newCall(request).execute();
             return response.body().string();
 
-            
+
         } catch (Exception e) {
             Log.d("16febV1", "e doin ==>"+e.toString());
         }

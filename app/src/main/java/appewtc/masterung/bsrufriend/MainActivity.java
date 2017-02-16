@@ -8,14 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     //Explicit การประกาศตัวแปร
     private Button signInButton, signUpButton;
     private EditText userEditText, passEditText;
     private String userString, passString;
-    private String[] loginString;
+    private String[] loginString = new String[8];
     private static final String urlPHP = "http://swiftcodingthai.com/bsru/get_user_pattanan.php";
+    private boolean aBoolean = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,32 @@ public class MainActivity extends AppCompatActivity {
             getUser.execute(urlPHP);
             String strJSON = getUser.get();
             Log.d("16febV1", "strJSON ==> +" + strJSON);
+
+            JSONArray jsonArray = new JSONArray(strJSON);
+            for (int i=0 ; i<jsonArray.length();i+=1) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (userString.equals(jsonObject.getString("User"))) {
+
+                    loginString[0] = jsonObject.getString("id");
+                    loginString[1] = jsonObject.getString("Name");
+                    loginString[2] = jsonObject.getString("User");
+                    loginString[3] = jsonObject.getString("Password");
+                    loginString[4] = jsonObject.getString("Image");
+                    loginString[5] = jsonObject.getString("Avata");
+                    loginString[6] = jsonObject.getString("Lat");
+                    loginString[7] = jsonObject.getString("Lng");
+
+                    aBoolean = false;
+
+                } //if
+
+            } //for
+
+            if (aBoolean) {
+                //User False
+                MyAlert myAlert = new MyAlert(MainActivity.this);
+                myAlert.myDialog("หา user ไม่เจอ","ไม่มี" + userString + "ในฐานข้อมูลของเรา");
+            }
 
         } catch (Exception e) {
             Log.d("16febV1" ,"e checkUserPass ==>" +e.toString());
