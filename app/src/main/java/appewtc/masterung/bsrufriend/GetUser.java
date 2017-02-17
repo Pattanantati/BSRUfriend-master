@@ -8,10 +8,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import static android.R.string.ok;
-
 /**
- * Created by Dell on 16/02/2017.
+ * Created by masterUNG on 2/16/2017 AD.
  */
 
 public class GetUser extends AsyncTask<String, Void, String>{
@@ -25,18 +23,19 @@ public class GetUser extends AsyncTask<String, Void, String>{
     @Override
     protected String doInBackground(String... strings) {
 
-
         try {
+
             OkHttpClient okHttpClient = new OkHttpClient();
             Request.Builder builder = new Request.Builder();
             Request request = builder.url(strings[0]).build();
             Response response = okHttpClient.newCall(request).execute();
             return response.body().string();
 
-
         } catch (Exception e) {
-            Log.d("16febV1", "e doin ==>"+e.toString());
+            Log.d("16febV1", "e doin ==> " + e.toString());
+            return null;
         }
-        return null;
+
+
     }
-}   // Main class
+}   // Main Class

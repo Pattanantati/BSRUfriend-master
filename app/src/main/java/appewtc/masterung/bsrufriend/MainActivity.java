@@ -18,10 +18,9 @@ public class MainActivity extends AppCompatActivity {
     private Button signInButton, signUpButton;
     private EditText userEditText, passEditText;
     private String userString, passString;
-    private String[] loginString = new String[8];
-    private static final String urlPHP = "http://swiftcodingthai.com/bsru/get_user_pattanan.php";
+    private String[] loginStrings = new String[8];
+    private static final String urlPHP = "http://swiftcodingthai.com/bsru/get_user_master.php";
     private boolean aBoolean = true;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,66 +44,83 @@ public class MainActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //check spec and get value from edit text
+
+                //Check Space and get Value from Edit Text
                 userString = userEditText.getText().toString().trim();
                 passString = passEditText.getText().toString().trim();
                 if (userString.equals("") || passString.equals("")) {
-                    //have spec
+                    //Have Space
                     MyAlert myAlert = new MyAlert(MainActivity.this);
-                    myAlert.myDialog("มีช่องว่าง","กรุณากรอกทุกช่อง");
+                    myAlert.myDialog("มีช่องว่าง", "กรุณากรอกทุกช่อง คะ");
                 } else {
-                    //no space
+                    //No Space
                     checkUserPass();
+
                 }
-            } // onClick
+
+            }   // onClick
         });
+
+
     }   // Main Method
 
     private void checkUserPass() {
+
         try {
+
             GetUser getUser = new GetUser(MainActivity.this);
             getUser.execute(urlPHP);
             String strJSON = getUser.get();
-            Log.d("16febV1", "strJSON ==> +" + strJSON);
+            Log.d("16febV1", "strJSON ==> " + strJSON);
 
             JSONArray jsonArray = new JSONArray(strJSON);
-            for (int i=0 ; i<jsonArray.length();i+=1) {
+            for (int i = 0; i < jsonArray.length(); i += 1) {
+
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 if (userString.equals(jsonObject.getString("User"))) {
 
-                    loginString[0] = jsonObject.getString("id");
-                    loginString[1] = jsonObject.getString("Name");
-                    loginString[2] = jsonObject.getString("User");
-                    loginString[3] = jsonObject.getString("Password");
-                    loginString[4] = jsonObject.getString("Image");
-                    loginString[5] = jsonObject.getString("Avata");
-                    loginString[6] = jsonObject.getString("Lat");
-                    loginString[7] = jsonObject.getString("Lng");
+                    loginStrings[0] = jsonObject.getString("id");
+                    loginStrings[1] = jsonObject.getString("Name");
+                    loginStrings[2] = jsonObject.getString("User");
+                    loginStrings[3] = jsonObject.getString("Password");
+                    loginStrings[4] = jsonObject.getString("Image");
+                    loginStrings[5] = jsonObject.getString("Avata");
+                    loginStrings[6] = jsonObject.getString("Lat");
+                    loginStrings[7] = jsonObject.getString("Lng");
 
                     aBoolean = false;
 
-                } //if
+                }   // if
 
-            } //for
+            }   // for
 
             if (aBoolean) {
                 //User False
                 MyAlert myAlert = new MyAlert(MainActivity.this);
-                myAlert.myDialog("หา user ไม่เจอ","ไม่มี" + userString + "ในฐานข้อมูลของเรา");
-            } else if (!passString.equals(loginString[3])) {
-                //Password false
+                myAlert.myDialog("หา User นี่ไม่เจอ ?", "ไม่มี " + userString + " ในฐานข้อมูลของเรา");
+            } else if (!passString.equals(loginStrings[3])) {
+                //Password False
                 MyAlert myAlert = new MyAlert(MainActivity.this);
-                myAlert.myDialog("Password false","Please try again password false");
+                myAlert.myDialog("Password False", "Please Try Again Password False");
+
             } else {
-                Toast.makeText(MainActivity.this,"Welcome" + loginString[1],
+                //Password True
+                Toast.makeText(MainActivity.this, "Welcome " + loginStrings[1],
                         Toast.LENGTH_SHORT).show();
-                //password true
+
+                //Intent to Service
+                Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
+                intent.putExtra("Login", loginStrings);
+                startActivity(intent);
+                finish();
+
             }
 
 
         } catch (Exception e) {
-            Log.d("16febV1" ,"e checkUserPass ==>" +e.toString());
+            Log.d("16febV1", "e checkUserPass ==> " + e.toString());
         }
-    }// checkUserPass
+
+    }   // checkUserPass
 
 }   // Main Class นี่คือ คลาสหลัก
