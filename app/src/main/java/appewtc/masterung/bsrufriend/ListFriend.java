@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -21,11 +20,12 @@ public class ListFriend extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.livFriend);
 
-        //create view
+        //Create ListView
         try {
+
             GetUser getUser = new GetUser(ListFriend.this);
-            MyContant myContant = new MyContant();
-            getUser.execute(myContant.getUrlPHPString());
+            MyContant myConstant = new MyContant();
+            getUser.execute(myConstant.getUrlPHPString());
             String strJSON = getUser.get();
 
             JSONArray jsonArray = new JSONArray(strJSON);
@@ -42,12 +42,13 @@ public class ListFriend extends AppCompatActivity {
                 latStrings[i] = jsonObject.getString("Lat");
                 lngStrings[i] = jsonObject.getString("Lng");
 
-            }//for
+            }   //for
 
-            FriendAdapter friendAdapter = new FriendAdapter(ListFriend.this,imageStrings,nameStrings);
+            FriendAdapter friendAdapter = new FriendAdapter(ListFriend.this,
+                    imageStrings, nameStrings);
             listView.setAdapter(friendAdapter);
 
-            ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -62,11 +63,12 @@ public class ListFriend extends AppCompatActivity {
             });
 
 
+
         } catch (Exception e) {
-            Log.d("17febV3", "e ListView ==>" + e.toString());
+            Log.d("17febV3", "e ListView ==> " + e.toString());
         }
 
 
-    }//main method
+    }   // Main Method
 
-}//main class
+}   // Main Class
